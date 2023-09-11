@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notepad</title>
+    <link rel="stylesheet" href="net.css" />
+</head>
+
+<body>
+    <div class="main">
+        <div class="note">
+            <h1>NOTEPAD</h1>
+        </div>
+        <div class="main-container">
+            <div class="header">
+                <input type="text" class="txtHeader" id="txtHeader" placeholder="Enter title here" />
+                &nbsp;
+            </div>
+            <div class="content">
+                <textarea class="txtContent" id="txtContent" placeholder="Enter Your Notes Here"></textarea>
+            </div>
+        </div>
+        <div class="options">
+            <center>
+                <button onclick="save()" class="btn btn-save">SAVE</button>
+                <button onclick="clearTasks()" class="btn btn-clear">CLEAR</button>
+            </center>
+        </div>
+    </div>
+    <ul id="taskList"></ul>
+    <script>
+        const ul = document.getElementById('taskList');
+        const inputHeader = document.getElementById('txtHeader');
+        const inputContent = document.getElementById('txtContent');
+
+        let itemArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
+
+        itemArray.forEach(addTask);
+        function addTask(task) {
+            const li = document.createElement('li');
+            li.textContent = task.fileName + ': ' + task.fileContent;
+            ul.appendChild(li);
+        }
+
+        function save() {
+            const fileName = inputHeader.value;
+            const fileContent = inputContent.value;
+
+            if (fileName && fileContent) {
+                itemArray.push({ fileName, fileContent });
+                localStorage.setItem('items', JSON.stringify(itemArray));
+                addTask({ fileName, fileContent });
+                inputHeader.value = '';
+                inputContent.value = '';
+            } else {
+                alert("Please enter both title and content.");
+            }
+        }
+
+        function clearTasks() {
+            localStorage.clear();
+            ul.innerHTML = '';
+            itemArray = [];
+        }
+    </script>
+</body>
+</html>
